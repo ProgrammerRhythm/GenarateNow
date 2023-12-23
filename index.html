@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Dom-to-image library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+</head>
+
+<style>
+    /* Global styling */
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    /* Styling for input container */
+    .input-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    /* Styling for the Generate Certificate button */
+    .generateCertificate {
+        padding: 17px 40px;
+        border-radius: 50px;
+        cursor: pointer;
+        border: 1px solid hsl(261deg 80% 48%);
+        background-color: white;
+        box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-size: 15px;
+        transition: all 0.5s ease;
+        margin-bottom: 10px;
+    }
+
+    /* Hover effect for Generate Certificate button */
+    .generateCertificate:hover {
+        letter-spacing: 3px;
+        background-color: hsl(261deg 80% 48%);
+        color: hsl(0, 0%, 100%);
+        box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+    }
+
+    /* Active effect for Generate Certificate button */
+    .generateCertificate:active {
+        letter-spacing: 3px;
+        background-color: hsl(261deg 80% 48%);
+        color: hsl(0, 0%, 100%);
+        box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+        transform: translateY(10px);
+        transition: 100ms;
+    }
+
+    /* Styling for the certificate container */
+    .certificate-container {
+        position: relative;
+        text-align: center;
+    }
+
+    /* Styling for user name */
+    .user-name {
+        position: absolute;
+        top: 91%;
+        left: 42%;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* Styling for input container labels */
+    .input-container label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Styling for input elements */
+    .input-container input {
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Styling for input container buttons */
+    .input-container button {
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+
+    /* Styling for user image */
+    .user-image {
+        position: absolute;
+        top: 81%;
+        left: 32%;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    /* Styling for the custom button */
+    .cssbuttons-io-button {
+        display: flex;
+        align-items: center;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 17px;
+        padding: 0.8em 1.5em 0.8em 1.2em;
+        color: white;
+        background: #ad5389;
+        background: linear-gradient(0deg, rgba(77,54,208,1) 0%, rgba(132,116,254,1) 100%);
+        border: none;
+        box-shadow: 0 0.7em 1.5em -0.5em #4d36d0be;
+        letter-spacing: 0.05em;
+        border-radius: 20em;
+    }
+
+    /* Styling for the custom button SVG */
+    .cssbuttons-io-button svg {
+        margin-right: 8px;
+    }
+
+    /* Hover effect for the custom button */
+    .cssbuttons-io-button:hover {
+        box-shadow: 0 0.5em 1.5em -0.5em #4d36d0be;
+    }
+
+    /* Active effect for the custom button */
+    .cssbuttons-io-button:active {
+        box-shadow: 0 0.3em 1em -0.5em #4d36d0be;
+    }
+
+    /* Styling for the Download button */
+    #Downlaod {
+        display: none;
+    }
+    footer{
+        margin: 15px;
+    }
+    #userNameInput{
+        border-radius: 8px;
+        border: 1px solid gray;
+        width: 280px;
+    }
+</style>
+
+<body>
+    <!-- Certificate container with user details -->
+    <div class="certificate-container">
+        <img id="certificateTemplate" class="img-fluid" src="certificate.png" alt="Certificate Template">
+        <div id="userName" class="user-name">Your Name</div>
+        <img id="userImage" class="user-image" src="user.png" alt="User Image">
+    </div>
+
+    <!-- Input container for user input -->
+    <div class="input-container">
+        <label for="userNameInput">Enter Your Name:</label>
+        <input type="text" id="userNameInput" placeholder="Your Name">
+        <label for="userImageInput">Upload Your Picture:</label>
+        <input type="file" class="form-control" id="userImageInput" accept="image/*">
+        <!-- Generate Certificate button -->
+        <button class="generateCertificate" onclick="generateCertificate()">Generate</button>
+        <!-- Download Certificate button -->
+        <button class="cssbuttons-io-button" id="Downlaod" onclick="downloadCertificate()">  <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M1 14.5a6.496 6.496 0 0 1 3.064-5.519 8.001 8.001 0 0 1 15.872 0 6.5 6.5 0 0 1-2.936 12L7 21c-3.356-.274-6-3.078-6-6.5zm15.848 4.487a4.5 4.5 0 0 0 2.03-8.309l-.807-.503-.12-.942a6.001 6.001 0 0 0-11.903 0l-.12.942-.805.503a4.5 4.5 0 0 0 2.029 8.309l.173.013h9.35l.173-.013zM13 12h3l-4 5-4-5h3V8h2v4z" fill="currentColor"></path></svg>
+            <span>Download</span></button>
+    </div>
+    <footer>
+        <h4>Developed by <span style="color: hsl(261deg 80% 48%);">Rhythm Munshi</span></h4>
+    </footer>
+    <!-- JavaScript libraries and scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>
